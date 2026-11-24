@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071326">
+<meta name="description" content="Jayanth's daily routine and habit tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>JAYANTH · ROUTINE OS</title>
+<style>
+:root{color-scheme:dark;--bg:#06101f;--panel:#0d1c32;--panel2:#102541;--line:#1c3858;--blue:#39bfff;--cyan:#55e4ff;--muted:#91a8c5;--green:#39d6a1}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#123b62 0,transparent 42%),var(--bg);color:#eaf5ff;font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.wrap{max-width:780px;margin:auto;padding:18px 15px 40px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 18px}.brand{font-size:13px;letter-spacing:2.4px;color:var(--cyan);font-weight:800}.sub{font-size:11px;color:var(--muted);letter-spacing:1.4px;margin-top:4px}.clock{text-align:right;font-variant-numeric:tabular-nums;font-size:25px;font-weight:750;color:#c8efff}.date{font-size:11px;color:var(--muted)}
+.card{background:linear-gradient(145deg,rgba(16,37,65,.96),rgba(9,23,42,.98));border:1px solid var(--line);border-radius:19px;padding:17px;margin:13px 0;box-shadow:0 12px 35px #0003}
+.hero{padding:20px;background:linear-gradient(120deg,#0e2a4c,#0c1b32 70%)}.eyebrow{font-size:11px;color:var(--muted);letter-spacing:1.5px}.hero h1{font-size:24px;margin:7px 0}.hero p{margin:0;color:var(--muted);font-size:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:17px}.stat{background:#07172b99;border:1px solid #234564;border-radius:13px;padding:12px}.stat b{display:block;font-size:22px;color:var(--cyan);font-variant-numeric:tabular-nums}.stat span{font-size:10px;color:var(--muted);letter-spacing:.8px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.section-head h2{font-size:16px;margin:0}.small{font-size:11px;color:var(--muted)}
+.progress{height:9px;background:#1b3049;border-radius:20px;overflow:hidden;margin:12px 0 5px}.bar{height:100%;width:0;background:linear-gradient(90deg,#188bff,var(--cyan));border-radius:20px;transition:width .25s}
+.next{font-size:18px;font-weight:700;color:var(--cyan);margin:5px 0}.nextsub{font-size:12px;color:var(--muted)}
+.task{display:grid;grid-template-columns:58px 23px 1fr auto;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid #1b3049}.task:last-child{border:0}.time{font-size:12px;color:var(--cyan);font-weight:750;font-variant-numeric:tabular-nums}.task input{width:19px;height:19px;accent-color:#27baff}.taskname{font-weight:650;font-size:14px}.taskmeta{font-size:10px;color:var(--muted);margin-top:3px}.task.done .taskname{text-decoration:line-through;color:#7891ad}.tag{font-size:9px;color:#a8dfff;background:#123451;border:1px solid #245476;padding:4px 7px;border-radius:20px}
+button{border:1px solid #2b6790;background:linear-gradient(135deg,#087fc0,#1261a0);color:white;border-radius:11px;padding:11px 13px;font-weight:700;font-size:12px;cursor:pointer}button.secondary{background:#142a45;border-color:#2b4563;color:#d6eaff}button:active{transform:scale(.98)}.buttons{display:flex;flex-wrap:wrap;gap:8px}
+input[type=time]{background:#091a2d;border:1px solid #2b4563;color:white;border-radius:9px;padding:8px;font:inherit}
+.alarmrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #1b3049}.alarmrow:last-child{border:0}.alarmrow label{font-size:12px}.alarmrow small{display:block;color:var(--muted);font-size:10px}
+.streak{font-size:25px;color:#ffd477;font-weight:800}.hint{color:var(--muted);font-size:11px;line-height:1.5}.foot{text-align:center;color:#637d9d;font-size:10px;padding:15px}
+@media(max-width:420px){.wrap{padding:13px 11px 30px}.clock{font-size:21px}.stats{gap:6px}.stat{padding:10px 8px}.stat b{font-size:19px}.task{grid-template-columns:49px 21px 1fr auto;gap:7px}.tag{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div><div class="brand">JAYANTH / ROUTINE OS</div><div class="sub">PERSONAL HABIT TRACKER</div></div>
+ <div><div class="clock" id="clock">--:--:--</div><div class="date" id="date"></div></div>
+</header>
+
+<section class="card hero">
+ <div class="eyebrow">TODAY'S MISSION</div><h1>Build your day. Own your goals.</h1>
+ <p id="greeting">One task at a time. Stay consistent.</p>
+ <div class="stats">
+  <div class="stat"><b id="percent">0%</b><span>COMPLETED</span></div>
+  <div class="stat"><b id="completed">0/15</b><span>TASKS DONE</span></div>
+  <div class="stat"><b class="streak" id="streak">0</b><span>DAY STREAK</span></div>
+ </div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+ <div class="small" id="progressText">Your daily progress</div>
+</section>
+
+<section class="card">
+ <div class="section-head"><h2>◈ NEXT UP</h2><span class="tag">LIVE SCHEDULE</span></div>
+ <div class="next" id="nextTask">Loading schedule…</div><div class="nextsub" id="countdown">Checking the next activity</div>
+</section>
+
+<section class="card">
+ <div class="section-head"><h2>◈ DAILY CHECKLIST</h2><span class="small">Tick tasks as you finish</span></div>
+ <div id="taskList"></div>
+ <div class="buttons" style="margin-top:13px"><button class="secondary" id="resetBtn">Reset today's checks</button></div>
+</section>
+
+<section class="card">
+ <div class="section-head"><h2>◈ REMINDER SETTINGS</h2><span class="tag">LOCAL REMINDERS</span></div>
+ <p class="hint">Choose which activities should remind you. For reliable reminders, keep this app open. Browser alarms may not fire when Android suspends or closes the app.</p>
+ <div class="buttons"><button id="notifyBtn">Enable notifications</button><button class="secondary" id="soundBtn">Sound: ON</button><button class="secondary" id="testBtn">Test sound</button></div>
+ <div class="small" id="notifyStatus" style="margin:9px 0">Notifications not enabled.</div>
+ <div id="alarmList"></div>
+</section>
+
+<section class="card">
+ <div class="section-head"><h2>◈ STUDY TARGET</h2><span class="tag">180 MIN / DAY</span></div>
+ <div class="stats">
+  <div class="stat"><b>45m</b><span>MATHS</span></div>
+  <div class="stat"><b>45m</b><span>PHYSICS</span></div>
+  <div class="stat"><b>45m</b><span>CHEMISTRY</span></div>
+ </div>
+ <p class="hint">Plus 45 minutes of English / daily revision. Your four study blocks add up to 3 hours.</p>
+</section>
+<div class="foot">ROUTINE OS · YOUR DATA STAYS ON THIS DEVICE</div>
+</div>
+<script>
+const schedule=[
+ ["06:30","Wake up and freshen up","Morning"],["06:45","Exercise and stretching","Health"],["07:05","Bath and get ready","Personal"],["07:25","Breakfast","Meals"],["07:45","Quick revision","Study"],["08:10","Prepare for school","Personal"],["08:20","School / College","School"],["18:00","Relax and refresh","Break"],["18:20","Mathematics","Study"],["19:05","Physics","Study"],["19:50","Short break","Break"],["20:00","Dinner","Meals"],["20:30","Chemistry","Study"],["21:15","English / daily revision","Study"],["21:45","Prepare for tomorrow and sleep","Sleep"]
+];
+const $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+let store={};try{store=JSON.parse(localStorage.getItem("routineOS")||"{}")}catch(e){}
+if(store.date!==today())store={date:today(),done:[],alarms:{},sound:true};
+let done=new Set(store.done||[]),alarms=store.alarms||{},sound=store.sound!==false,lastFired="";
+function persist(){store={date:today(),done:[...done],alarms,sound};localStorage.setItem("routineOS",JSON.stringify(store))}
+function drawTasks(){
+ $("taskList").innerHTML="";
+ schedule.forEach((s,i)=>{
+  const row=document.createElement("div");row.className="task"+(done.has(i)?" done":"");
+  const time=document.createElement("span");time.className="time";time.textContent=s[0];
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=done.has(i);cb.setAttribute("aria-label","Complete "+s[1]);
+  cb.onchange=()=>{cb.checked?done.add(i):done.delete(i);persist();drawTasks();updateProgress()};
+  const content=document.createElement("div");const name=document.createElement("div");name.className="taskname";name.textContent=s[1];const meta=document.createElement("div");meta.className="taskmeta";meta.textContent=s[2];content.append(name,meta);
+  const tag=document.createElement("span");tag.className="tag";tag.textContent=s[2].toUpperCase();
+  row.append(time,cb,content,tag);$("taskList").append(row);
+ });
+}
+function updateProgress(){
+ const p=Math.round(done.size/schedule.length*100);$("percent").textContent=p+"%";$("completed").textContent=done.size+"/"+schedule.length;$("bar").style.width=p+"%";$("progressText").textContent=p===100?"All missions complete. Excellent work!":"Keep going — every completed task counts.";
+}
+function updateClock(){
+ const d=new Date();$("clock").textContent=d.toLocaleTimeString("en-IN");$("date").textContent=d.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
+ const mins=d.getHours()*60+d.getMinutes();let next=schedule.find(s=>{let [h,m]=s[0].split(":").map(Number);return h*60+m>mins});
+ if(next){let [h,m]=next[0].split(":").map(Number),diff=h*60+m-mins;$("nextTask").textContent=next[1];$("countdown").textContent=next[0]+" · starts in "+Math.floor(diff/60)+"h "+diff%60+"m"}else{$("nextTask").textContent="Schedule complete";$("countdown").textContent="Time to wind down."}
+ $("greeting").textContent=d.getHours()<12?"Good morning. Make today count.":d.getHours()<17?"Stay focused. You're making progress.":"Finish strong, then make time to rest.";
+ const key=today()+"-"+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+ const item=schedule.find(s=>s[0]===key);
+ if(item&&alarms[item[0]]&&lastFired!==key){lastFired=key;fireReminder(item[1])}
+}
+function renderAlarms(){
+ $("alarmList").innerHTML="";
+ schedule.forEach(s=>{
+  const row=document.createElement("div");row.className="alarmrow";
+  const label=document.createElement("label");label.innerHTML="<strong>"+s[1]+"</strong><small>"+s[0]+"</small>";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!alarms[s[0]];cb.setAttribute("aria-label","Reminder for "+s[1]);
+  cb.onchange=()=>{alarms[s[0]]=cb.checked;persist()};
+  row.append(label,cb);$("alarmList").append(row);
+ });
+}
+function beep(){
+ if(!sound)return;
+ try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C();[0,.25,.5].forEach(t=>{let o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=880;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.12,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.18);o.start(c.currentTime+t);o.stop(c.currentTime+t+.2)})}catch(e){}
+}
+async function enableNotifications(){
+ if(!("Notification"in window)){$("notifyStatus").textContent="Notifications are not supported in this browser.";return}
+ try{let p=await Notification.requestPermission();$("notifyStatus").textContent=p==="granted"?"Notifications permitted. Keep the app open for scheduled reminders.":"Permission not granted."}catch(e){$("notifyStatus").textContent="Could not request notification permission."}
+}
+function fireReminder(message){beep();if("Notification"in window&&Notification.permission==="granted")new Notification("Routine OS reminder",{body:message}) ;$("notifyStatus").textContent="Reminder: "+message}
+$("notifyBtn").onclick=enableNotifications;
+$("soundBtn").onclick=()=>{sound=!sound;$("soundBtn").textContent="Sound: "+(sound?"ON":"OFF");persist()};
+$("testBtn").onclick=()=>{beep();$("notifyStatus").textContent="Sound test requested."};
+$("resetBtn").onclick=()=>{if(confirm("Clear today's completed tasks?")){done.clear();persist();drawTasks();updateProgress()}};
+function streakCount(){
+ let dates=JSON.parse(localStorage.getItem("routineStreaks")||"{}");
+ // A day counts when all schedule items are checked.
+ if(done.size===schedule.length)dates[today()]=true;
+ localStorage.setItem("routineStreaks",JSON.stringify(dates));
+ let n=0,d=new Date();
+ if(!dates[today()])d.setDate(d.getDate()-1);
+ while(dates[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")]){n++;d.setDate(d.getDate()-1)}
+ $("streak").textContent=n;
+}
+drawTasks();renderAlarms();updateProgress();updateClock();streakCount();setInterval(()=>{updateClock();streakCount()},1000);
+if("serviceWorker"in navigator&&location.protocol!=="file:"){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
