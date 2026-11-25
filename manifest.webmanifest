@@ -1,0 +1,14 @@
+{
+  "name": "Jayanth Routine OS",
+  "short_name": "Routine OS",
+  "description": "Daily routine, habits and study tracker",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06101f",
+  "theme_color": "#071326",
+  "orientation": "portrait",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
